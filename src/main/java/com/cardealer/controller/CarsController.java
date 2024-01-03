@@ -44,6 +44,10 @@ public class CarsController {
         return new ResponseEntity<>(carService.findAllByCreatedAtBetween(Date.from(Instant.now().minus(5, ChronoUnit.DAYS)), Date.from(Instant.now())), HttpStatus.OK);
     }
     //Danh sách sản phẩm bán chạy
+    @GetMapping("/best-seller-products")
+    public ResponseEntity<List<CarResponse>> findBestSellerCar() {
+        return new ResponseEntity<>(carService.findBestSellerCar(), HttpStatus.OK);
+    }
     //Danh sách sản phẩm theo danh mục
     @GetMapping("/categories/{categoryId}")
     public ResponseEntity<List<CarResponse>> findCarByBrand(@PathVariable String categoryId) throws NotFoundException {

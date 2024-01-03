@@ -296,4 +296,25 @@ public class CarService implements ICarService {
                 .sku(car.getSku())
                 .build();
     }
+
+    @Override
+    public List<CarResponse> findBestSellerCar() {
+        return carRepository.findBestSellerCar().stream()
+                .filter(car -> car.getBrand().getStatus())
+                .map(car -> {
+                    return CarResponse.builder()
+                            .id(car.getId())
+                            .name(car.getName())
+                            .colors(car.getColors())
+                            .type(car.getType())
+                            .description(car.getDescription())
+                            .unitPrice(car.getUnitPrice())
+                            .stockQuantity(car.getStockQuantity())
+                            .image(car.getImage())
+                            .brand(car.getBrand())
+                            .status(car.getStatus())
+                            .sku(car.getSku())
+                            .build();
+                }).toList();
+    }
 }

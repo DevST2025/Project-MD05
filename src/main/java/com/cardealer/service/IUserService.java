@@ -1,7 +1,10 @@
 package com.cardealer.service;
 
 import com.cardealer.exception.NotFoundException;
+import com.cardealer.exception.PasswordNotMatchException;
+import com.cardealer.model.dto.request.PasswordRequest;
 import com.cardealer.model.dto.request.RegisterRequest;
+import com.cardealer.model.dto.request.UserRequest;
 import com.cardealer.model.entity.ShopingCart;
 import com.cardealer.model.entity.User;
 import org.springframework.data.domain.Page;
@@ -26,4 +29,9 @@ public interface IUserService {
     User receptorAccount(String id) throws NotFoundException;
     Page<User> findUserByName(String name, Pageable pageable);
     List<ShopingCart> findAllCartItem() throws NotFoundException;
+    User showProfile() throws NotFoundException;
+    User editProfile(UserRequest userRequest) throws NotFoundException;
+    void changePassword(PasswordRequest passwordRequest) throws NotFoundException, PasswordNotMatchException;
+
+
 }

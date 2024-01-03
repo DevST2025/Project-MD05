@@ -1,8 +1,11 @@
 package com.cardealer.service.impl;
 
 import com.cardealer.exception.NotFoundException;
+import com.cardealer.exception.PasswordNotMatchException;
 import com.cardealer.model.common.ERole;
+import com.cardealer.model.dto.request.PasswordRequest;
 import com.cardealer.model.dto.request.RegisterRequest;
+import com.cardealer.model.dto.request.UserRequest;
 import com.cardealer.model.entity.Role;
 import com.cardealer.model.entity.ShopingCart;
 import com.cardealer.model.entity.User;
@@ -28,6 +31,7 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
     private final ICartRepository cartRepository;
+    private final UploadService uploadService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -144,6 +148,47 @@ public class UserService implements IUserService {
     public List<ShopingCart> findAllCartItem() throws NotFoundException {
         User user = getLoginUser();
         return cartRepository.findByUser(user);
+    }
+
+    @Override
+    public User showProfile() throws NotFoundException {
+        return getLoginUser();
+    }
+
+    @Override
+    public User editProfile(UserRequest userRequest) throws NotFoundException {
+        User userLogin = getLoginUser();
+        String avaUrl = userLogin.getAvatar();
+        if (!userRequest.getFile().isEmpty() || userRequest.getFile() != null) {
+            avaUrl = uploadService.uploadFile(userRequest.getFile());
+        }
+        User user = User.builder()
+                .id(userLogin.getId())
+                .username(userLogin.getUsername())
+                .email(userRequest.getEmail())
+                .fullName(userRequest.getFullName())
+                .password(userLogin.getPassword())
+                .avatar(avaUrl)
+                .phone(userRequest.getPhone())
+                .address(userRequest.getAddress())
+                .birthday(userRequest.getBirthday())
+                .createdAt(userLogin.getCreatedAt())
+                .updatedAt(new Date(System.currentTimeMillis()))
+                .status(userLogin.getStatus())
+                .roles(userLogin.getRoles())
+                .build();
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public void changePassword(PasswordRequest passwordRequest) throws NotFoundException, PasswordNotMatchException {
+        User userLogin = getLoginUser();
+        if (!passwordEncoder.matches(passwordRequest.getOldPass(), userLogin.getPassword())) {
+            throw new PasswordNotMatchException("Mật khẩu không trùng khớp");
+        }
+        userLogin.setPassword(passwordEncoder.encode(passwordRequest.getNewPass()));
+        userRepository.save(userLogin);
     }
 
 

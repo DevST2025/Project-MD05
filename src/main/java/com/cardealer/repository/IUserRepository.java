@@ -30,6 +30,4 @@ public interface IUserRepository extends JpaRepository<User, String> {
     Page<User> findAll(Pageable pageable);
     Page<User> findByFullNameContaining(String name, Pageable pageable);
 
-
-
 }

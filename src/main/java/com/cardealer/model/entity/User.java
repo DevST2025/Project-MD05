@@ -39,7 +39,7 @@ public class User {
     private Date createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @Column(name = "updated_at")
-    private String updatedAt;
+    private Date updatedAt;
     private Boolean status;
 
     @ManyToMany(fetch = FetchType.EAGER)

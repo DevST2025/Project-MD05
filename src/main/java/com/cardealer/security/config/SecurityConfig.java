@@ -60,12 +60,12 @@ public class SecurityConfig {
                                 .requestMatchers("/api.cardealer.com/v1/categories/**").permitAll()
                                 .requestMatchers("/api.cardealer.com/v1/products/**").permitAll()
 
-                                .requestMatchers("/api.cardealer.com/v1/shopping-cart/**").permitAll()
-                                .requestMatchers("/api.cardealer.com/v1/account/**").permitAll()
-                                .requestMatchers("/api.cardealer.com/v1/user/**").permitAll()
-                                .requestMatchers("/api.cardealer.com/v1/wish-list/**").permitAll()
+                                .requestMatchers("/api.cardealer.com/v1/shopping-cart/**").hasAuthority("ROLE_USER")
+                                .requestMatchers("/api.cardealer.com/v1/account/**").hasAuthority("ROLE_USER")
+                                .requestMatchers("/api.cardealer.com/v1/user/**").hasAuthority("ROLE_USER")
+                                .requestMatchers("/api.cardealer.com/v1/wish-list/**").hasAuthority("ROLE_USER")
 
-                                .requestMatchers("/api.cardealer.com/v1/admin/**").permitAll()
+                                .requestMatchers("/api.cardealer.com/v1/admin/**").hasAuthority("ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 );
         http.authenticationProvider(authenticationProvider());

@@ -2,6 +2,7 @@ package com.cardealer.model.entity;
 
 import com.cardealer.model.common.EOrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,7 @@ public class Order {
 
     @Column(length = 100)
     private String serialNumber;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -47,6 +48,6 @@ public class Order {
     @Column(name = "received_at")
     private Date receivedAt;
 
-//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-//    private List<OrderDetail> orderDetails = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }

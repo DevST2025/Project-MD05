@@ -1,5 +1,6 @@
 package com.cardealer.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,10 +17,12 @@ import java.io.Serializable;
 public class OrderDetail {
     @EmbeddedId
     private OrderDetailId id;
+    @JsonIgnore
     @ManyToOne
     @MapsId("orderId")
     @JoinColumn(name = "order_id")
     private Order order;
+    @JsonIgnore
     @ManyToOne
     @MapsId("carId")
     @JoinColumn(name = "car_id")

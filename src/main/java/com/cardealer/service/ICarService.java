@@ -29,4 +29,5 @@ public interface ICarService {
     List<CarResponse> findAllByBrandId(String brandId) throws NotFoundException; // sản phẩm nổi bật, sản phẩm theo danh mục
     List<CarResponse> findAllByCreatedAtBetween(Date start, Date end);
     CarResponse showCarDetailById(String id) throws NotFoundException;
+    List<CarResponse> findBestSellerCar();
 }

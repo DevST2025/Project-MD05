@@ -2,6 +2,7 @@ package com.cardealer.advice;
 
 import com.cardealer.exception.LoginFailException;
 import com.cardealer.exception.NotFoundException;
+import com.cardealer.exception.PasswordNotMatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,5 +32,10 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<String> handlerLoginFail(LoginFailException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
 
+    }
+
+    @ExceptionHandler(PasswordNotMatchException.class)
+    public ResponseEntity<String> handlerChangePassFail(PasswordNotMatchException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

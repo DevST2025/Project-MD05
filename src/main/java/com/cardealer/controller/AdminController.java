@@ -3,14 +3,10 @@ package com.cardealer.controller;
 import com.cardealer.exception.NotFoundException;
 import com.cardealer.model.dto.request.BrandRequest;
 import com.cardealer.model.dto.request.CarRequest;
-import com.cardealer.model.entity.Brand;
-import com.cardealer.model.entity.Car;
-import com.cardealer.model.entity.Role;
-import com.cardealer.model.entity.User;
-import com.cardealer.service.IBrandService;
-import com.cardealer.service.ICarService;
-import com.cardealer.service.IRoleService;
-import com.cardealer.service.IUserService;
+import com.cardealer.model.dto.request.DateRequest;
+import com.cardealer.model.dto.response.OrderResponse;
+import com.cardealer.model.entity.*;
+import com.cardealer.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +26,7 @@ public class AdminController {
     private final IRoleService roleService;
     private final ICarService carService;
     private final IBrandService brandService;
+    private final IOrderService orderService;
     @GetMapping("/users")
     public ResponseEntity<Page<User>> findAllUsers(Pageable pageable) {
         return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
@@ -106,10 +104,34 @@ public class AdminController {
         return new ResponseEntity<>(brandService.editBrandById(categoryId, brandRequest), HttpStatus.OK);
     }
 
-    @DeleteMapping("/categories/{categoryId}") // chua test
+    @DeleteMapping("/categories/{categoryId}")
     public ResponseEntity<String> deleteBrandById(@PathVariable String categoryId) throws NotFoundException {
         brandService.deleteById(categoryId);
         return new ResponseEntity<>("Xoá danh mục thành công", HttpStatus.OK);
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderResponse>> findAllOrders() {
+        return new ResponseEntity<>(orderService.findAll(), HttpStatus.OK);
+    }
+    @GetMapping("/orders/{orderStatus}/s")
+    public ResponseEntity<List<OrderResponse>> findAllByStatus(@PathVariable String orderStatus) {
+        return new ResponseEntity<>(orderService.finAllByStatus(orderStatus), HttpStatus.OK);
+    }
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<Order> findOrderById(@PathVariable String orderId) throws NotFoundException {
+        return new ResponseEntity<>(orderService.findById(orderId), HttpStatus.OK);
+    }
+
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<String> changeOrderStatus(@PathVariable String orderId, @RequestBody Map<String, String> map) throws NotFoundException {
+        orderService.changeStatusById(orderId, map.get("status"));
+        return new ResponseEntity<>("Đã cập nhật trạng thái đơn hàng thành công", HttpStatus.OK);
+    }
+
+    @GetMapping("/dash-board/sales")
+    public ResponseEntity<Double> revenue(@RequestBody DateRequest dateRequest) {
+        return new ResponseEntity<>(orderService.revenue(dateRequest.getStart(), dateRequest.getEnd()), HttpStatus.OK);
     }
 
 
